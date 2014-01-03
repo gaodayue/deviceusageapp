@@ -13,7 +13,7 @@ public class GoogleAnalyticsUploader implements UploaderService {
 	@Override
 	public void uploadTrackedApp(TrackedApp app) {
 		// TODO Auto-generated method stub
-
+		int i = 0;
 	}
 
 	@Override
