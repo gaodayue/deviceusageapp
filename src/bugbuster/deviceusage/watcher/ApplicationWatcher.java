@@ -4,21 +4,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.util.Log;
 
 public class ApplicationWatcher {
+	private final String TAG = "ApplicationWatcher";
 	
 	class Watcher implements Runnable {
 		
-		private AtomicBoolean isWatch;
-		
-		public Watcher() {
-			isWatch = new AtomicBoolean(false);
-		}
-		
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
-			watcherHandler.postDelayed(this, 1000);
+			if (isWatch.get()) {
+				
+				Log.d(TAG, "in watcher#run()");
+				
+				watcherHandler.postDelayed(this, 1000);
+			}
 		}
 		
 	}
@@ -27,6 +27,8 @@ public class ApplicationWatcher {
 	private Handler watcherHandler;
 	private Watcher watcher;
 	private AppEventListener listener;
+	
+	private AtomicBoolean isWatch = new AtomicBoolean(false);
 	
 	public ApplicationWatcher(AppEventListener listener) {
 		watcherThread = new HandlerThread("watcher thread");
@@ -38,20 +40,42 @@ public class ApplicationWatcher {
 		this.listener = listener;
 	}
 	
+	/**
+	 * Start the application watcher to collect usage data in background.
+	 * 
+	 * Do nothing if it has been started.
+	 */
 	public void start() {
-		if (!watcher.isWatch.get()) {
-			watcher.isWatch.set(true);
+		if (!isWatch.get()) {
+			Log.d(TAG, "watcher started!");
+			isWatch.set(true);
+			
 			watcherHandler.post(watcher);	
 		}
 	}
 
+	/**
+	 * Stop the application watcher, which then 
+	 * can be restarted by calling start().
+	 * 
+	 * Note that this just stop collecting data,
+	 * the background watcher thread is still alive.
+	 */
 	public void stop() {
-		if (watcher.isWatch.get()) {
-			watcher.isWatch.set(false);
+		if (isWatch.get()) {
+			Log.d(TAG, "watcher stopped!");
+			isWatch.set(false);
+			
 			watcherHandler.removeCallbacks(watcher);
 		}
 	}
 	
+	/**
+	 * Shutdown the application watcher.
+	 * 
+	 * This will stop the background watcher thread and
+	 * no operation should be performed later.
+	 */
 	public void shutdown() {
 		this.stop();
 		watcherThread.quit();
