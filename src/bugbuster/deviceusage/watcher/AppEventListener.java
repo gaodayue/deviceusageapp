@@ -2,11 +2,11 @@ package bugbuster.deviceusage.watcher;
 
 public interface AppEventListener {
 	
-	public void onActivityStart(String name, String version);
+	public void onActivityStart(String pkgName);
 	
-	public void onServiceStart(String name, String version);
+	public void onServiceStart(String pkgName);
 	
-	public void onServiceStop(String name, String version);
+	public void onServiceStop(String pkgName);
 
 	public void onScreenOff();
 	

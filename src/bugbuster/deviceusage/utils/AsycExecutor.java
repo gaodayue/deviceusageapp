@@ -14,6 +14,10 @@ public final class AsycExecutor {
 		executor = Executors.newSingleThreadExecutor();
 	}
 	
+	/**
+	 * Task will be guaranteed to run in sequence.
+	 * @param task
+	 */
 	public void asyncRun(Runnable task) {
 		try {
 			executor.execute(task);
@@ -22,7 +26,7 @@ public final class AsycExecutor {
 		}
 	}
 	
-	public void shutdown() {
+	public void quit() {
 		try {
 			executor.shutdown();
 		} catch (Exception e) {
