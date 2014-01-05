@@ -1,12 +1,19 @@
 package bugbuster.deviceusage.access;
 
+import android.content.Context;
 import bugbuster.deviceusage.access.AppStatistics;
 
-public interface UploaderService {
+public abstract class UploaderService {
 	
-	public void startService();
+	protected Context context;
 	
-	public void uploadAppStatistics(AppStatistics app);
+	public UploaderService(Context context) {
+		this.context = context;
+	}
 	
-	public void stopService();
+	public abstract void startService();
+	
+	public abstract void uploadAppStatistics(AppStatistics app);
+	
+	public abstract void stopService();
 }

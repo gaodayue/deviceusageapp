@@ -8,10 +8,8 @@ import java.util.Map;
 import android.content.Context;
 import android.util.Log;
 import bugbuster.deviceusage.access.AppStatistics;
-import bugbuster.deviceusage.access.GoogleAnalyticsUploader;
 import bugbuster.deviceusage.access.LocalStoreService;
 import bugbuster.deviceusage.access.SQLiteLocalStore;
-import bugbuster.deviceusage.access.UploaderService;
 import bugbuster.deviceusage.utils.AsycExecutor;
 import bugbuster.deviceusage.watcher.AppEventListener;
 
@@ -23,7 +21,6 @@ public class AppEventCallback implements AppEventListener {
 	private Map<String, AppTracker> bgTrackers;
 	
 	private LocalStoreService localStore;
-	private UploaderService uploader;
 	
 	// long time operation such as database operation should be
 	// done asynchronously in worker thread.
@@ -33,7 +30,6 @@ public class AppEventCallback implements AppEventListener {
 		fgTrackers = new HashMap<String, AppTracker>();
 		bgTrackers = new HashMap<String, AppTracker>();
 		localStore = new SQLiteLocalStore(context);
-		uploader = new GoogleAnalyticsUploader();
 		
 		this.workerThread = workerThread;
 	}

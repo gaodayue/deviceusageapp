@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="StartService" />
+        android:text="@string/btn_startservice_text" />
 
     <Button
         android:id="@+id/btn_stopservice"
@@ -23,6 +23,16 @@
         android:layout_alignBottom="@+id/btn_startservice"
         android:layout_marginLeft="23dp"
         android:layout_toRightOf="@+id/btn_startservice"
-        android:text="StopService" />
+        android:text="@string/btn_stopservice_text" />
+
+    <Button
+        android:id="@+id/btn_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_startservice"
+        android:layout_alignRight="@+id/btn_startservice"
+        android:layout_below="@+id/btn_startservice"
+        android:layout_marginTop="18dp"
+        android:text="@string/btn_upload_text" />
 
 </RelativeLayout>
