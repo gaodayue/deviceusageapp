@@ -1,5 +1,6 @@
 package bugbuster.deviceusage.component;
 
+import bugbuster.deviceusage.utils.AsycExecutor;
 import bugbuster.deviceusage.watcher.ApplicationWatcher;
 import android.app.Service;
 import android.content.Intent;
@@ -10,6 +11,9 @@ public class DeviceUsageService extends Service {
 	private final String TAG = getClass().getSimpleName();
 	
 	private ApplicationWatcher appWatcher;
+	private AppEventCallback eventCallback;
+	
+	private AsycExecutor callbackExecutor;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -20,7 +24,10 @@ public class DeviceUsageService extends Service {
 	public void onCreate() {
 		Log.d(TAG, "onCreate() DeviceUsageService");
 		
-		this.appWatcher = new ApplicationWatcher(this, new AppEventCallback());
+		this.callbackExecutor = new AsycExecutor();
+		this.eventCallback = new AppEventCallback(this, callbackExecutor);
+		
+		this.appWatcher = new ApplicationWatcher(this, eventCallback);
 		
 		// TODO register any receivers here
 	}
@@ -41,6 +48,7 @@ public class DeviceUsageService extends Service {
 		// unregister receivers here
 		
 		appWatcher.shutdown();
+		callbackExecutor.quit();
 	}
 
 }

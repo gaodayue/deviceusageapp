@@ -22,9 +22,9 @@ public class SQLiteLocalStore extends LocalStoreService {
     private static final String COLNAME_FGCOUNT	= "fgnum";	// how many times user starts the app's activity
     private static final String COLNAME_BGTIME	= "bgtime";	// how long the app runs services in background
     private static final String COLNAME_BGCOUNT	= "bgnum";	// how many times the app runs services in background
-    private static final String COLNAME_TRAFFIC	= "traffics";	// total network traffics
-    private static final String COLNAME_DISK	= "diskusage";	// total app data's disk usage
-    // private static final String COLNAME_NUM_UPDATES	= "num_updates";
+    private static final String COLNAME_SEND	= "sendbytes";		// total bytes send to network
+    private static final String COLNAME_RECEIVE	= "receivebytes"; 	// total bytes receive from network
+    private static final String COLNAME_DISK	= "diskusage";	// total bytes of app's data usage
     
     private static final String SQL_CREATE_TABLE =
     		"CREATE TABLE '" + TABLE_NAME + "' (" +
@@ -34,8 +34,9 @@ public class SQLiteLocalStore extends LocalStoreService {
     		COLNAME_FGCOUNT	+ " INTEGER," +
     		COLNAME_BGTIME	+ " INTEGER," +	// in second
     		COLNAME_BGCOUNT	+ " INTEGER," +
-    		COLNAME_TRAFFIC + " INTEGER," +	// in KB
-    		COLNAME_DISK	+ " INTEGER);";
+    		COLNAME_SEND	+ " BIGINT," +
+    		COLNAME_RECEIVE	+ " BIGINT," +
+    		COLNAME_DISK	+ " BIGINT);";
     
     private static final String SQL_DROP_TABLE =
     		"DROP TABLE IF EXIST '" + TABLE_NAME + "';";
@@ -43,9 +44,18 @@ public class SQLiteLocalStore extends LocalStoreService {
     private static final String WHERE_CLAUSE = COLNAME_PKGNAME + "=?";
 
 	private static class DeviceUsageDBOpenHelper extends SQLiteOpenHelper {
+		
+		private static DeviceUsageDBOpenHelper instance;
+		
+		public static DeviceUsageDBOpenHelper getInstance(Context context) {
+			if (instance == null) {
+				instance = new DeviceUsageDBOpenHelper(context);
+			}
+			return instance;
+		}
         		
-        public DeviceUsageDBOpenHelper(Context context) {
-        	super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        private DeviceUsageDBOpenHelper(Context context) {
+        	super(context.getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
         }
 
 		@Override
@@ -64,12 +74,11 @@ public class SQLiteLocalStore extends LocalStoreService {
 	
 	public SQLiteLocalStore(Context context) {
 		super(context);
-		dbhelper = new DeviceUsageDBOpenHelper(context);
 	}
 
 	@Override
 	public void startService() {
-		// nothing to do
+		dbhelper = DeviceUsageDBOpenHelper.getInstance(context);
 	}
 
 	@Override
@@ -133,8 +142,9 @@ public class SQLiteLocalStore extends LocalStoreService {
 				c.getInt(c.getColumnIndex(COLNAME_FGCOUNT)),
 				c.getInt(c.getColumnIndex(COLNAME_BGTIME)),
 				c.getInt(c.getColumnIndex(COLNAME_BGCOUNT)),
-				c.getInt(c.getColumnIndex(COLNAME_TRAFFIC)),
-				c.getInt(c.getColumnIndex(COLNAME_DISK)));
+				c.getLong(c.getColumnIndex(COLNAME_SEND)),
+				c.getLong(c.getColumnIndex(COLNAME_RECEIVE)),
+				c.getLong(c.getColumnIndex(COLNAME_DISK)));
 	}
 	
 	private ContentValues constructRowFromApp(AppStatistics app) {
@@ -145,7 +155,8 @@ public class SQLiteLocalStore extends LocalStoreService {
 		row.put(COLNAME_FGCOUNT, app.getForegroundCount());
 		row.put(COLNAME_BGTIME, app.getBackgroundTime());
 		row.put(COLNAME_BGCOUNT, app.getBackgroundCount());
-		row.put(COLNAME_TRAFFIC, app.getNetworkTracfics());
+		row.put(COLNAME_SEND, app.getSendBytes());
+		row.put(COLNAME_RECEIVE, app.getReceiveBytes());
 		row.put(COLNAME_DISK, app.getDiskUsage());
 		return row;
 	}

@@ -13,22 +13,25 @@ public class AppStatistics {
 	private int		foregroundCount;
 	private int		backgroundTime;
 	private int		backgroundCount;
-	private int		networkTracfics;
-	private int		diskUsage;
+	private long	sendBytes;
+	private long	receiveBytes;
+	private long	diskUsage;
 	
 	public AppStatistics(String packageName, String version,
 			int foregroundTime, int foregroundCount, int backgroundTime,
-			int backgroundCount, int networkTracfics, int diskUsage) {
+			int backgroundCount, long sendBytes, long receiveBytes,
+			long diskUsage) {
 		this.packageName = packageName;
 		this.version = version;
 		this.foregroundTime = foregroundTime;
 		this.foregroundCount = foregroundCount;
 		this.backgroundTime = backgroundTime;
 		this.backgroundCount = backgroundCount;
-		this.networkTracfics = networkTracfics;
+		this.sendBytes = sendBytes;
+		this.receiveBytes = receiveBytes;
 		this.diskUsage = diskUsage;
 	}
-	
+
 	/**
 	 * Update current statistics using data from `stats`.
 	 * 
@@ -37,7 +40,7 @@ public class AppStatistics {
 	 *         the updated status.
 	 */
 	public AppStatistics update(AppStatistics stats) {
-		if (stats.getPackageName().equals(this.getPackageName())) {
+		if (!stats.getPackageName().equals(this.getPackageName())) {
 			throw new IllegalArgumentException("cannot update AppStatistics " + this + " with " + stats);
 		}
 		return new AppStatistics(
@@ -47,10 +50,11 @@ public class AppStatistics {
 				stats.getForegroundCount() + foregroundCount,
 				stats.getBackgroundTime() + backgroundTime,
 				stats.getBackgroundCount() + backgroundCount,
-				stats.getNetworkTracfics() + networkTracfics,
+				stats.getSendBytes() + sendBytes,
+				stats.getReceiveBytes() + receiveBytes,
 				stats.getDiskUsage() + diskUsage);
 	}
-
+	
 	public String getPackageName() {
 		return packageName;
 	}
@@ -75,14 +79,18 @@ public class AppStatistics {
 		return backgroundCount;
 	}
 
-	public int getNetworkTracfics() {
-		return networkTracfics;
+	public long getSendBytes() {
+		return sendBytes;
 	}
 
-	public int getDiskUsage() {
+	public long getReceiveBytes() {
+		return receiveBytes;
+	}
+
+	public long getDiskUsage() {
 		return diskUsage;
 	}
-	
+
 	@SuppressLint("DefaultLocale")
 	@Override
 	public String toString() {

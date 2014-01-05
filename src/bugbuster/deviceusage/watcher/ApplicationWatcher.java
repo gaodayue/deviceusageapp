@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import bugbuster.deviceusage.utils.AsycExecutor;
-
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.ActivityManager.RunningTaskInfo;
@@ -16,6 +14,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.util.Log;
 
 public class ApplicationWatcher {
@@ -23,6 +22,10 @@ public class ApplicationWatcher {
 	
 	class Watcher implements Runnable {
 		private static final int MAX_SERVICES_NUM = 50;
+		
+		private static final long TICK_PERIOD = 15 * 1000; // 15 second
+		
+		private long lastTickTime;
 		
 		private ActivityManager am;
 		private PowerManager pm;
@@ -42,7 +45,7 @@ public class ApplicationWatcher {
 		@Override
 		public void run() {
 			if (isWatch.get()) {
-				Log.d(TAG, "in watcher#run()");
+				Log.v(TAG, "in watcher#run()");
 				
 				//----------------------------------------------------
 				// get foreground activity information
@@ -53,13 +56,7 @@ public class ApplicationWatcher {
 					if (null != currentFgApp && !currentFgApp.equals(lastFgApp)) {
 						Log.d(TAG, "found a new fg app: " + currentFgApp);
 						lastFgApp = currentFgApp;
-						listernerThread.asyncRun(new Runnable() {
-							
-							@Override
-							public void run() {
-								listener.onActivityStart(currentFgApp);
-							}
-						});
+						listener.onActivityStart(currentFgApp);
 					}
 				}
 				
@@ -72,22 +69,27 @@ public class ApplicationWatcher {
 				lastServices.removeAll(servicesStoped);
 				lastServices.addAll(servicesStarted);
 				
-				listernerThread.asyncRun(new Runnable() {
-					
-					@Override
-					public void run() {
-						for (String pkgName : servicesStarted) {
-							Log.d(TAG, "found newly started foreground service: " + pkgName);
-							listener.onServiceStart(pkgName);
-						}
-						
-						for (String pkgName : servicesStoped) {
-							Log.d(TAG, "found newly stoped foreground service: " + pkgName);
-							listener.onServiceStop(pkgName);
-						}
-					}
-				});
+				for (String pkgName : servicesStarted) {
+					Log.d(TAG, "found newly started foreground service: " + pkgName);
+					listener.onServiceStart(pkgName);
+				}
 				
+				for (String pkgName : servicesStoped) {
+					Log.d(TAG, "found newly stoped foreground service: " + pkgName);
+					listener.onServiceStop(pkgName);
+				}
+				
+				//----------------------------------------------------
+				// send a tick event every TICK_PERIOD
+				//----------------------------------------------------
+				long now  = SystemClock.elapsedRealtime();
+				if (lastTickTime == 0) {
+					lastTickTime = now;
+				} else if (now - lastTickTime >= TICK_PERIOD) {
+					Log.d(TAG, "tick");
+					listener.tick();
+					lastTickTime = now;
+				}
 				
 				watcherHandler.postDelayed(this, 1000);
 			}
@@ -144,8 +146,6 @@ public class ApplicationWatcher {
 	private Handler watcherHandler;
 	private Watcher watcher;
 	
-	// callback methods in listener are executed in the listener thread
-	private AsycExecutor listernerThread;
 	private AppEventListener listener;
 	
 	private AtomicBoolean isWatch = new AtomicBoolean(false);
@@ -160,7 +160,6 @@ public class ApplicationWatcher {
 		watcherHandler = new Handler(watcherThread.getLooper());
 		watcher = new Watcher();
 		
-		this.listernerThread = new AsycExecutor();
 		this.listener = listener;
 	}
 	
@@ -203,6 +202,5 @@ public class ApplicationWatcher {
 	public void shutdown() {
 		this.stop();
 		this.watcherThread.quit();
-		this.listernerThread.quit();
 	}
 }
