@@ -38,8 +38,7 @@ public class GoogleAnalyticsUploader implements UploaderService {
 	@Override
 	public void startService() {
 		easyTracker = EasyTracker.getInstance(this.context);
-		GoogleAnalytics.getInstance(context).getLogger()
-				.setLogLevel(LogLevel.VERBOSE);
+		//GoogleAnalytics.getInstance(context).getLogger().setLogLevel(LogLevel.VERBOSE);
 		easyTracker.send(MapBuilder.createAppView().build());
 	}
 
