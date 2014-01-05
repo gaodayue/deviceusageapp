@@ -1,16 +1,17 @@
 package bugbuster.deviceusage.component;
 
 import bugbuster.deviceusage.R;
+import bugbuster.deviceusage.access.AppStatistics;
+import bugbuster.deviceusage.access.GoogleAnalyticsUploader;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import com.google.analytics.tracking.android.EasyTracker;
 
 public class MainActivity extends Activity {
-	
+
 	Button startBtn;
 	Button stopBtn;
 
@@ -18,24 +19,26 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		startBtn = (Button) this.findViewById(R.id.btn_startservice);
 		stopBtn = (Button) this.findViewById(R.id.btn_stopservice);
-		
+
 		startBtn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				Intent service = new Intent(MainActivity.this, DeviceUsageService.class);
+				Intent service = new Intent(MainActivity.this,
+						DeviceUsageService.class);
 				startService(service);
 			}
 		});
-		
+
 		stopBtn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				Intent service = new Intent(MainActivity.this, DeviceUsageService.class);
+				Intent service = new Intent(MainActivity.this,
+						DeviceUsageService.class);
 				stopService(service);
 			}
 		});
@@ -48,18 +51,4 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-	
-	@Override
-	protected void onStart() {
-		super.onStart();
-	    EasyTracker.getInstance(this).activityStart(this);
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-	    EasyTracker.getInstance(this).activityStop(this);
-	}
-
-	
 }

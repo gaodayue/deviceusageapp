@@ -1,5 +1,8 @@
 package bugbuster.deviceusage.component;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
+
 import bugbuster.deviceusage.watcher.ApplicationWatcher;
 import android.app.Service;
 import android.content.Intent;

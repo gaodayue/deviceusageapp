@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import bugbuster.deviceusage.access.AppStatistics;
+import bugbuster.deviceusage.access.GoogleAnalyticsUploader;
 import bugbuster.deviceusage.utils.AsycExecutor;
 
 import android.app.ActivityManager;
@@ -37,6 +39,8 @@ public class ApplicationWatcher {
 			km = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
 			
 			lastServices = new HashSet<String>();
+			
+		
 		}
 		
 		@Override
