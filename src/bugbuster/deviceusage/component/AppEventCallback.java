@@ -5,19 +5,19 @@ import bugbuster.deviceusage.watcher.AppEventListener;
 public class AppEventCallback implements AppEventListener {
 
 	@Override
-	public void onActivityStart(String name, String version) {
+	public void onActivityStart(String pkgName) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onServiceStart(String name, String version) {
+	public void onServiceStart(String pkgName) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onServiceStop(String name, String version) {
+	public void onServiceStop(String pkgName) {
 		// TODO Auto-generated method stub
 
 	}

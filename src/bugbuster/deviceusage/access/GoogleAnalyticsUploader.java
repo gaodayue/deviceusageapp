@@ -1,6 +1,6 @@
 package bugbuster.deviceusage.access;
 
-import bugbuster.deviceusage.component.TrackedApp;
+import bugbuster.deviceusage.access.AppStatistics;
 
 public class GoogleAnalyticsUploader implements UploaderService {
 
@@ -11,7 +11,7 @@ public class GoogleAnalyticsUploader implements UploaderService {
 	}
 
 	@Override
-	public void uploadTrackedApp(TrackedApp app) {
+	public void uploadAppStatistics(AppStatistics app) {
 		// TODO Auto-generated method stub
 
 	}

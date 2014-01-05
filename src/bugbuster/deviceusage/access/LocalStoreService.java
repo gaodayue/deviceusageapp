@@ -2,15 +2,22 @@ package bugbuster.deviceusage.access;
 
 import java.util.List;
 
-import bugbuster.deviceusage.component.TrackedApp;
+import android.content.Context;
+import bugbuster.deviceusage.access.AppStatistics;
 
-public interface LocalStoreService {
+public abstract class LocalStoreService {
 	
-	public void startService();
+	protected Context context;
 	
-	public boolean putTrackedApp(TrackedApp app);
+	public LocalStoreService(Context context) {
+		this.context = context;
+	}
 	
-	public List<TrackedApp> listAllTrackedApps();
+	public abstract void startService();
 	
-	public void stopService();
+	public abstract boolean putAppStatistics(AppStatistics app);
+	
+	public abstract List<AppStatistics> listAllAppStatistics();
+	
+	public abstract void stopService();
 }
