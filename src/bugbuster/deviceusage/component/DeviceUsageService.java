@@ -25,9 +25,9 @@ public class DeviceUsageService extends Service {
 		Log.d(TAG, "onCreate() DeviceUsageService");
 		
 		this.callbackExecutor = new AsycExecutor();
-		this.eventCallback = new AppEventCallback(this, callbackExecutor);
+		this.eventCallback = new AppEventCallback(getApplicationContext(), callbackExecutor);
 		
-		this.appWatcher = new ApplicationWatcher(this, eventCallback);
+		this.appWatcher = new ApplicationWatcher(getApplicationContext(), eventCallback);
 		
 		// TODO register any receivers here
 	}

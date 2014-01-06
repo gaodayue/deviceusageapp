@@ -55,7 +55,7 @@ public class SQLiteLocalStore extends LocalStoreService {
 		}
         		
         private DeviceUsageDBOpenHelper(Context context) {
-        	super(context.getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
+        	super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
 
 		@Override
