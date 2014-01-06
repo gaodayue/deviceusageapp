@@ -82,11 +82,7 @@ public class MainActivity extends Activity {
 					LocalStoreService localStore = new SQLiteLocalStore(context);
 					localStore.startService();
 					allStats = localStore.listAllAppStatistics();
-				}
-			});
-			
-			executor.asyncRun(new Runnable() {
-				public void run() {
+					
 					UploaderService uploader = new GoogleAnalyticsUploader(context);
 					uploader.startService();
 					for (AppStatistics stat : allStats) {

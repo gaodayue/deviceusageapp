@@ -6,8 +6,8 @@ import bugbuster.deviceusage.access.AppStatistics;
 
 public class AppBackgroundTracker extends AppTracker {
 
-	public AppBackgroundTracker(String trackedApp) {
-		super(trackedApp);
+	public AppBackgroundTracker(String trackedApp, String version) {
+		super(trackedApp, version);
 	}
 
 	@Override

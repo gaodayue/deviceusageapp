@@ -1,5 +1,6 @@
 #IDE files
 .classpath
+*/.classpath
 .settings/org.eclipse.jdt.core.prefs
 
 # built application files

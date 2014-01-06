@@ -50,9 +50,9 @@ public class AppStatistics {
 				stats.getForegroundCount() + foregroundCount,
 				stats.getBackgroundTime() + backgroundTime,
 				stats.getBackgroundCount() + backgroundCount,
-				stats.getSendBytes() + sendBytes,
-				stats.getReceiveBytes() + receiveBytes,
-				stats.getDiskUsage() + diskUsage);
+				Math.max(stats.getSendBytes(), sendBytes),
+				Math.max(stats.getReceiveBytes(), receiveBytes),
+				Math.max(stats.getDiskUsage(), diskUsage));
 	}
 	
 	public String getPackageName() {
@@ -94,12 +94,15 @@ public class AppStatistics {
 	@SuppressLint("DefaultLocale")
 	@Override
 	public String toString() {
-		return String.format("{%s/%s: fgtime %d sec, fgcount %d, bgtime %d sec, bgcount %d}",
+		return String.format("{%s/%s: fgtime %d sec, fgcount %d, bgtime %d sec, bgcount %d, tx %d, rx %d, diskusage %d}",
 				this.packageName,
 				this.version,
 				this.foregroundTime,
 				this.foregroundCount,
 				this.backgroundTime,
-				this.backgroundCount);
+				this.backgroundCount,
+				this.sendBytes,
+				this.receiveBytes,
+				this.diskUsage);
 	}
 }

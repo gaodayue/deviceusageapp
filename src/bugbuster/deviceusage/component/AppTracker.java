@@ -54,8 +54,9 @@ public abstract class AppTracker {
 	
 	protected long lastStartTime;
 	
-	public AppTracker(String trackedApp) {
+	public AppTracker(String trackedApp, String version) {
 		this.packageName = trackedApp;
+		this.version = version;
 	}
 	
 	/**
